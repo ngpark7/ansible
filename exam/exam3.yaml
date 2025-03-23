@@ -1,0 +1,32 @@
+---
+- name: exam3
+  hosts: webdb
+  vars_files:
+    - vars/exam3.yaml
+
+  tasks:
+    - name: install required packages
+      dnf:
+        name: "{{ item }}"
+        state: latest
+      loop: "{{ pkg }}"
+
+    - name: start & enable web services
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop: "{{ svc }}"
+
+    - name: add rules to firewall
+      firewalld:
+        service: "{{ item }}"
+        permanent: true
+        immediate: yes
+        state: enabled
+      loop: "{{ fw }}"
+
+    - name: add index.php to web root
+      ansible.builtin.copy:
+        src: ./1.php
+        dest: /var/www/html/index.php

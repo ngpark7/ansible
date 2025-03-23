@@ -1,0 +1,40 @@
+---
+- name: Quiz 2-2  # 반복문 활용 (loop:)
+  hosts: serverc.test.com
+  vars_files: vars/quiz2_pkg.yaml
+  tasks:
+    - name: Install need pkg
+      dnf:
+        name:
+          - "{{ web_pkg }}"
+          - "{{ lang_pkg }}"
+          - "{{ lang_db_pkg }}"
+          - "{{ db_pkg }}"
+          - "{{ ftp_pkg }}"
+        state: present
+
+    - name: Start Service and Enable for web
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - httpd
+        - mariadb
+        - vsftpd
+
+    - name: permit traffic in default zone for service
+      ansible.posix.firewalld:
+        service: "{{ item }}"
+        permanent: true
+        immediate: true
+        state: enabled
+      loop:
+        - http
+        - ftp
+
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: ./1.php
+        dest: /var/www/html/index.php
+        mode: '0644'

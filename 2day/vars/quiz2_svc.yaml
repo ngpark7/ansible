@@ -1,0 +1,15 @@
+pkg:
+  - httpd
+  - php
+  - php-mysqlnd
+  - mariadb-server
+  - vsftpd
+
+svc:
+  - httpd
+  - mariadb
+  - vsftpd
+
+fw:
+  - http
+  - ftp

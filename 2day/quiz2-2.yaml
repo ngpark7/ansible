@@ -1,0 +1,39 @@
+---
+- name: Quiz 2
+  hosts: serverc.test.com
+  vars_files: vars/quiz2_pkg.yaml
+  tasks:
+    - name: install need pkg
+      dnf:
+        name:
+          - "{{ web_pkg }}"
+          - "{{ lang_pkg }}"
+          - "{{ lang_db_pkg }}"
+          - "{{ db_pkg }}"
+          - "{{ ftp_pkg }}"
+        state: latest
+
+    - name: start & enable web
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - httpd
+        - mariadb
+        - vsftpd
+
+    - name: add rule to firewall 1
+      firewalld:
+        service: "{{ item }}"
+        permanent: true
+        immediate: yes
+        state: enabled
+      loop:
+        - http
+        - ftp
+
+    - name: add index.php
+      ansible.builtin.copy:
+        src: ./1.php
+        dest: /var/www/html/index.php

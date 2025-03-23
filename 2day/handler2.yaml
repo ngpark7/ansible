@@ -1,0 +1,30 @@
+# 핸들러가 다수일 때 (호출한 순서대로 동작)
+# shell, command : 멱등성 x (변경 사항이이 없어도 변경된 것으로 인식)
+---
+- name: handler test 2
+  hosts: db
+  tasks:
+    # 명령어 처리 (df -> cal)
+    - name: Run df Command
+      shell: df 
+      notify: rundf
+    - name: Run cal Command
+      command: cal
+      notify: runcal
+
+    # 더미 메시지 출력
+    - name: Print Dummy MSG 1
+      debug:
+        msg: job
+    - name: Print Dummy MSG 2
+      debug:
+        msg: completed
+
+  # 핸들러로 메시지 출력 (cal -> df)
+  handlers:
+    - name: runcal
+      debug:
+        msg: cal Command Running
+    - name: rundf
+      debug:
+        msg: df Command Running

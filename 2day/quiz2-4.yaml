@@ -1,0 +1,44 @@
+---
+- name: Quiz 2-4 # 변수 확장 (vars)
+  hosts: serverc.test.com
+  vars:
+    pkg:
+      - httpd
+      - php
+      - php-mysqlnd
+      - mariadb-server
+      - vsftpd
+    svc: 
+      - httpd
+      - mariadb
+      - vsftpd
+    fw:
+      - http
+      - ftp
+
+  tasks:
+    - name: install need pkg
+      dnf:
+        name: "{{ item }}"
+        state: latest
+      loop: "{{ pkg }}"
+
+    - name: start & enable web
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop: " {{ svc }} " 
+
+    - name: add rule to firewall 1
+      firewalld:
+        service: "{{ item }}"
+        permanent: true
+        immediate: yes
+        state: enabled
+      loop: " {{ fw }} " 
+
+    - name: add index.php
+      ansible.builtin.copy:
+        src: ./1.php
+        dest: /var/www/html/index.php

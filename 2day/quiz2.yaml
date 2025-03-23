@@ -1,40 +1,41 @@
 ---
 - name: Quiz 2
   hosts: serverb.test.com
+  vars_files: vars/quiz2_pkg.yaml
   tasks:
     - name: Install need pkg
       dnf:
-        name: 
-          - php
-          - php-mysqlnd
-          - httpd
-          - vsftpd
-          - mariadb-server
+        name:
+          - "{{ web_pkg }}"
+          - "{{ lang_pkg }}"
+          - "{{ lang_db_pkg }}"
+          - "{{ db_pkg }}"
+          - "{{ ftp_pkg }}"
         state: present
-    - name: Start Service and Enable for Apache
+    - name: Start Service and Enable for web
       ansible.builtin.service:
-        name: httpd
+        name: "{{ web_pkg }}"
         state: started
         enabled: yes
-    - name: Start Service and Enable for MariaDB
+    - name: Start Service and Enable for db
       ansible.builtin.service:
-        name: mariadb
+        name: "{{ db }}"
         state: started
         enabled: yes
-    - name: Start Service and Enable for vsftpd
+    - name: Start Service and Enable for ftp
       ansible.builtin.service:
-        name: vsftpd
+        name: "{{ ftp_pkg }}"
         state: started
         enabled: yes
     - name: permit traffic in default zone for service (http)
       ansible.posix.firewalld:
-        service: http
+        service: "{{ web }}"
         permanent: true
         immediate: true
         state: enabled
-    - name: permit traffic in default zone for service (http)
+    - name: permit traffic in default zone for service (ftp)
       ansible.posix.firewalld:
-        service: ftp
+        service: "{{ ftp }}"
         permanent: true
         immediate: true
         state: enabled

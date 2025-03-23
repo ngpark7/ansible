@@ -1,0 +1,29 @@
+---
+- name: handler test 1
+  hosts: db
+  tasks:
+    - name: Install WEB Package
+      dnf:
+        name: nginx
+        state: latest
+    
+    - name: Change WEB Page
+      ansible.builtin.copy:
+        content: "Hello Handler"
+        dest: /usr/share/nginx/html/index.html
+
+      notify: Restart WEB # handlers.name 값과 동일하게 쓸 것
+
+    - name: Print Dummy MSG 1
+      debug:
+        msg: job
+    - name: Print Dummy MSG 2
+      debug:
+        msg: completed
+
+  handlers: # tasks(playbook) 에서 변경 작업이 완료 됐을 때 수행할 작업 지정
+    - name: Restart WEB
+      service:
+        name: nginx
+        state: restarted
+        enabled: true
