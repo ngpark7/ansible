@@ -1,0 +1,9 @@
+---
+- name: create group
+  hosts: db
+  tasks:
+    - name: group add by group module
+      group:
+        name: docker
+        state: present
+        gid: 3220

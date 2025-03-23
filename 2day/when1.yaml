@@ -1,0 +1,12 @@
+---
+- name: when example 1
+  hosts: db
+  tasks:
+    - name: no when apply
+      debug:
+        msg: > 
+            "{{ ansible_facts.fqdn }}"
+            is not 32bit system
+    - name: prtinting dummy msg
+      debug:
+        msg: 더미 메시지

@@ -1,0 +1,32 @@
+---
+- name: Provisioning FTP Server
+  hosts: filesvr
+  tasks:
+    - name: Install by dnf
+      ansible.builtin.dnf:
+        name: vsftpd
+        state: latest
+    - name: Start service vsftpd
+      ansible.builtin.service:
+        name: vsftpd
+        state: started
+        enabled: yes
+    - name: permit traffic in default zone for ftp service
+      ansible.posix.firewalld:
+        service: ftp
+        permanent: true
+        immediate: true
+        state: enabled
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: ./index.html
+        dest: /var/ftp/pub/1.txt
+        mode: '0644'
+  
+- name: install ftp pkg to localhost
+  hosts: localhost
+  tasks:
+    - name: install ftp client
+      ansible.builtin.dnf:
+        name: ftp
+        state: latest

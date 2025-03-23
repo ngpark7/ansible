@@ -1,0 +1,11 @@
+---
+- name: using register
+  hosts: db
+  tasks:
+    - name: run dnf command
+      command: df -Th
+      register: answer
+
+    - name: prtint answer value
+      ansible.builtin.debug:
+        var: answer

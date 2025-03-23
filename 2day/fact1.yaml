@@ -1,0 +1,39 @@
+---
+- name: show me facts
+  hosts: db
+  tasks:
+    - name: print new fact 1
+      debug:
+        msg: gateway
+            address
+            is
+            "{{ ansible_facts.default_ipv4.gateway }}"
+            and
+            hostname
+            is
+            "{{ ansible_facts.fqdn }}"
+
+    - name: print new fact 2
+      debug:
+        msg: |
+            gateway
+            address
+            is
+            "{{ ansible_facts.default_ipv4.gateway }}"
+            and
+            hostname
+            is
+            "{{ ansible_facts.fqdn }}"
+
+    - name: print new fact 3
+      debug:
+        msg: >
+            gateway
+            address
+            is
+            "{{ ansible_facts.default_ipv4.gateway }}"
+            and
+            hostname
+            is
+            "{{ ansible_facts.fqdn }}"        
+            

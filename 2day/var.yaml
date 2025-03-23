@@ -1,0 +1,12 @@
+---
+- name: var testing
+  hosts: all
+  vars:
+    userid: k3s
+    nickname: "awx installer"
+  tasks:
+    - name: create {{ userid }} user
+      user:
+        name: "{{ userid }}"
+        comment: "{{ nickname }}"
+        group: wheel

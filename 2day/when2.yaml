@@ -1,0 +1,14 @@
+---
+- name: when example 2
+  hosts: db
+  tasks:
+    - name: when apply
+      debug:
+        msg: > 
+            "{{ ansible_facts.fqdn }}"
+            is not 32bit system
+      when: ansible_facts.architecture == "x86_64"
+
+    - name: prtinting dummy msg
+      debug:
+        msg: 더미 메시지

@@ -1,0 +1,8 @@
+---
+- name: run df  by command  module
+  hosts: web
+  tasks: 
+    - name: df command 
+      command:  df 
+
+

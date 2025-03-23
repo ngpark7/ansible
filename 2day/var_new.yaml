@@ -1,0 +1,10 @@
+---
+- name: var testing
+  hosts: all
+  vars_files: vars/lunch.yaml
+  tasks:
+    - name: create {{ userid }} user
+      user:
+        name: "{{ userid }}"
+        comment: "{{ nickname }}"
+        group: wheel

@@ -1,0 +1,12 @@
+192.168.11.[20:30]
+
+[web]
+server[a:b].test.com
+
+[db]
+serverc.test.com
+
+[webdb:children]
+web
+db
+

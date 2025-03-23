@@ -1,0 +1,17 @@
+---
+- name: when example 3
+  hosts: db
+  tasks:
+    - name: install GUI
+      dnf:
+        name: '@Server with GUI'
+        state: present
+      when:
+        - ansible_facts.mounts[0].mount == "/"
+        - ansible_facts.mounts[0].block_available > 10000000
+
+    - name: change runlevel
+      command: systemctl set-default graphical.target
+   
+    - name: restart system
+      reboot:

@@ -1,0 +1,23 @@
+---
+- name: Provisioning WEB Server
+  hosts: web
+  tasks:
+    - name: Install by dnf
+      ansible.builtin.dnf:
+        name: httpd
+        state: latest
+    - name: Start service httpd, if not started
+      ansible.builtin.service:
+        name: httpd
+        state: started
+    - name: permit traffic in default zone for http service
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        immediate: true
+        state: enabled
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: ./index.html
+        dest: /var/www/html/index.html
+        mode: '0644'
